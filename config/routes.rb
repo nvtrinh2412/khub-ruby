@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
+  # resources :slides
+  # resources :presentations
   resources :users
   resources :groups
+  resources :presentations do
+    resources :slides
+  end
   get '/current_user', to: 'auth#show'
   post '/auth/login', to: 'auth#create'
   post '/auth/sign_up', to: 'users#create'

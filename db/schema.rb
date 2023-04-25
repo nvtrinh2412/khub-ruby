@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_19_070800) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_21_100928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,6 +37,27 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_070800) do
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
+  create_table "presentations", force: :cascade do |t|
+    t.string "name"
+    t.bigint "creator_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_presentations_on_creator_id"
+  end
+
+  create_table "slides", force: :cascade do |t|
+    t.string "question"
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "presentation_id", null: false
+    t.string "sort"
+    t.string "heading"
+    t.string "sub_heading"
+    t.string "description"
+    t.index ["presentation_id"], name: "index_slides_on_presentation_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -47,4 +68,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_19_070800) do
 
   add_foreign_key "memberships", "groups"
   add_foreign_key "memberships", "users"
+  add_foreign_key "presentations", "users", column: "creator_id"
+  add_foreign_key "slides", "presentations"
 end

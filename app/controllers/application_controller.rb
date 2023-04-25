@@ -26,7 +26,6 @@ class ApplicationController < ActionController::API
 
 
     def decoded_token
-        puts "into decoded_token"
         begin
             jwt_payload, jwt_header = JWT.decode(request_token,jwt_key, true, { algorithm: 'HS256' })
 
@@ -46,7 +45,6 @@ class ApplicationController < ActionController::API
 
     def request_token
         #use Bearer token with format "Bearer <token>"
-        puts "Into request_token"
         header = request.headers[:Authorization]
         header.split(' ').last if header
     end
