@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  before_action :authorized, except: [:create]
+  before_action :authorized, except: [:create, :refresh_tokens]
 
   def create
     user = User.find_by(email: user_login_params[:email])
@@ -28,14 +28,30 @@ class AuthController < ApplicationController
    invalidate_token(logout_params[:refreshToken])
   end
 
+  def refresh_tokens
+    payload = decode_jwt_token_to_payload(refresh_token_params[:refreshToken])
+    user = User.find_by(id: payload['user_id'])
+    tokens = {
+      access: issue_token(user, 'access'),
+      refresh: issue_token(user, 'refresh'),
+    }
+    render json:{tokens: tokens}
+    # render json: {payload: payload}
+  end
+
   private
    def user_login_params
      params.permit(:email, :password)
-  end
+   end
 
   def logout_params
     params.permit(:refreshToken)
- end
+  end
+
+  def refresh_token_params
+    params.permit(:refreshToken)
+  end
+
 
 
 end

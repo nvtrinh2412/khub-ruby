@@ -3,6 +3,11 @@ class SlidesController < ApplicationController
 
   # GET /slides
   # GET /slides.json
+
+  def current
+    return render json: { error: 'No current slide' }
+  end
+
   def index
     @slides = Slide.all
   end
@@ -20,7 +25,7 @@ class SlidesController < ApplicationController
     @presentation = Presentation.find(params[:presentation_id])
     @slides = @presentation.slides.create(slides_list_params)
 
-    if @slides.all?(&:persisted?) # &:persisted? => short hand 
+    if @slides.all?(&:persisted?) # &:persisted? => short hand
       render json: @slides, status: :created
     else
       render json: @slides.errors, status: :unprocessable_entity

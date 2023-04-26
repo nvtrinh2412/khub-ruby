@@ -8,6 +8,8 @@ gem "active_model_serializers"
 gem "jwt"
 gem "byebug"
 gem 'dotenv-rails', groups: [:development, :test]
+gem 'actioncable', '~> 7.0.0'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 

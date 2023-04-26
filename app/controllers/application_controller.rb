@@ -35,7 +35,17 @@ class ApplicationController < ActionController::API
                 return JWT.decode(request_token,jwt_key, true, { algorithm: 'HS256' })
             end
         rescue JWT::DecodeError
-          [{error: "Invalid Token"}]
+            current_user = nil
+            [{error: "Invalid Token"}]
+        end
+    end
+
+    def decode_jwt_token_to_payload(token)
+        begin
+            jwt_payload, jwt_header = JWT.decode(token,jwt_key, true, { algorithm: 'HS256' })
+            return jwt_payload
+        rescue JWT::DecodeError
+            return nil
         end
     end
 

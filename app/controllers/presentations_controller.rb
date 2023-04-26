@@ -9,6 +9,27 @@ class PresentationsController < ApplicationController
       description: 'Try your best experience with us',
       answers: [],
   };
+
+  DEFAULT_CURRENT_SLIDE = {
+    id: '',
+    type: 'paragraph',
+    question: 'Welcome to KHUB',
+    description: 'Default slide',
+    answers: [],
+};
+  def send_current_slide
+    presentation = Presentation.find(params[:presentation_id])
+    current_slide = presentation.slides[params[:position].to_i]
+    puts "current_slide is: #{params[:position].to_i}"
+    if current_slide
+      ActionCable.server.broadcast "presentation_#{presentation.id}", current_slide
+      render json: current_slide
+    else
+      ActionCable.server.broadcast "presentation_#{presentation.id}", DEFAULT_CURRENT_SLIDE
+      render json: DEFAULT_CURRENT_SLIDE
+    end
+  end
+
   def index
     @presentations = current_user.presentations
     render json: @presentations
