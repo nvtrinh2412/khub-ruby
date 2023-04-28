@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_21_100928) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_28_030303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "chats", force: :cascade do |t|
+    t.text "text"
+    t.bigint "sender_id"
+    t.bigint "presentation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["presentation_id"], name: "index_chats_on_presentation_id"
+    t.index ["sender_id"], name: "index_chats_on_sender_id"
+  end
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
@@ -66,6 +76,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_21_100928) do
     t.string "username"
   end
 
+  add_foreign_key "chats", "presentations"
+  add_foreign_key "chats", "users", column: "sender_id"
   add_foreign_key "memberships", "groups"
   add_foreign_key "memberships", "users"
   add_foreign_key "presentations", "users", column: "creator_id"

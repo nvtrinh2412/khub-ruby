@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :groups
   resources :presentations do
     resources :slides
+    resources :chats
     post '/current', to: 'presentations#send_current_slide'
   end
   post '/auth/login', to: 'auth#create'

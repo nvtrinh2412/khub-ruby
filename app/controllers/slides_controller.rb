@@ -9,7 +9,7 @@ class SlidesController < ApplicationController
   end
 
   def index
-    @slides = Slide.all
+    @slides = Presentation.find(params[:presentation_id]).slides
   end
 
   # GET /slides/1
