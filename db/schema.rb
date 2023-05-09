@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_28_030303) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_08_133147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,6 +55,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_030303) do
     t.index ["creator_id"], name: "index_presentations_on_creator_id"
   end
 
+  create_table "questions", force: :cascade do |t|
+    t.text "text"
+    t.boolean "is_answered", default: false
+    t.integer "voted", default: 0
+    t.bigint "presentation_id", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["presentation_id"], name: "index_questions_on_presentation_id"
+    t.index ["user_id"], name: "index_questions_on_user_id"
+  end
+
   create_table "slides", force: :cascade do |t|
     t.string "question"
     t.string "category"
@@ -76,10 +88,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_28_030303) do
     t.string "username"
   end
 
+  create_table "vote_options", force: :cascade do |t|
+    t.string "text"
+    t.integer "count", default: 0
+    t.bigint "slide_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slide_id"], name: "index_vote_options_on_slide_id"
+  end
+
   add_foreign_key "chats", "presentations"
   add_foreign_key "chats", "users", column: "sender_id"
   add_foreign_key "memberships", "groups"
   add_foreign_key "memberships", "users"
   add_foreign_key "presentations", "users", column: "creator_id"
+  add_foreign_key "questions", "presentations"
+  add_foreign_key "questions", "users"
   add_foreign_key "slides", "presentations"
+  add_foreign_key "vote_options", "slides"
 end

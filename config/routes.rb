@@ -1,12 +1,19 @@
 Rails.application.routes.draw do
+  resources :vote_options
+  resources :questions
   # resources :slides
   # resources :presentations
   resources :users
   resources :groups
   resources :presentations do
-    resources :slides
+    resources :slides do
+      resources :vote_options
+    end
     resources :chats
+    resources :questions
     post '/current', to: 'presentations#send_current_slide'
+    delete '/slides', to: 'slides#destroy_list'
+    put '/slides', to: 'slides#update_list'
   end
   post '/auth/login', to: 'auth#create'
   post '/auth/sign_up', to: 'users#create'

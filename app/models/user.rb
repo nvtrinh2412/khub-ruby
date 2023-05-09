@@ -8,4 +8,5 @@ class User < ApplicationRecord
   has_many :groups , through: :memberships, dependent: :destroy
   has_many :presentations,  foreign_key: 'creator_id', dependent: :destroy
   has_many :chats , foreign_key: 'sender_id',  dependent: :destroy
+  has_many :questions, dependent: :destroy
 end

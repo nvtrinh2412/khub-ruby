@@ -42,7 +42,7 @@ class PresentationsController < ApplicationController
     @slides = @presentation.slides
     render json: {
       presentation: @presentation,
-      slides: @slides
+      slides: @slides.as_json(include: :vote_options)
     }
   end
 

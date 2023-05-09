@@ -23,7 +23,7 @@ class SlidesController < ApplicationController
   # POST /slides.json
   def create
     @presentation = Presentation.find(params[:presentation_id])
-    @slides = @presentation.slides.create(slides_list_params)
+    @slides = @presentation.slides.create(create_slides_list_params)
 
     if @slides.all?(&:persisted?) # &:persisted? => short hand
       render json: @slides, status: :created
@@ -48,6 +48,21 @@ class SlidesController < ApplicationController
     @slide.destroy
   end
 
+  def destroy_list
+    @slides = Slide.where(id: delete_slides_list_params)
+    @slides.destroy_all
+  end
+
+  def update_list
+    @slides = Slide.update(update_slides_list_params.map { |slide_params| slide_params[:id] }, update_slides_list_params)
+    if @slides.all?(&:valid?)
+      render json: @slides
+    else
+      render json: @slides.errors, status: :unprocessable_entity, message: 'Error while updating slides'
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_slide
@@ -59,9 +74,19 @@ class SlidesController < ApplicationController
       params.require(:slide).permit(:question, :description, :sort )
     end
 
-    def slides_list_params
+    def create_slides_list_params
       params.require(:slides).map do |slide_params|
-        slide_params.permit(:sort, :question, :description)
+        slide_params.permit( :sort, :question, :description)
       end
+    end
+
+    def update_slides_list_params
+      params.require(:slides).map do |slide_params|
+        slide_params.permit( :id, :sort, :question, :description)
+      end
+    end
+
+    def delete_slides_list_params
+      params.require(:slides)
     end
 end
